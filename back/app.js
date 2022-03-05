@@ -18,6 +18,8 @@ app.use(express.static('images'));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 app.use('/api/products', productRoutes);
-
 module.exports = app;
