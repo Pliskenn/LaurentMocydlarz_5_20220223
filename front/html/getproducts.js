@@ -1,0 +1,1 @@
+fetch('/Users/laurentmocydlarz/Desktop/Projets/LaurentMocydlarz_5_20220223/back/controllers/product.js')
