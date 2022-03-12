@@ -1,1 +1,6 @@
-fetch('/Users/laurentmocydlarz/Desktop/Projets/LaurentMocydlarz_5_20220223/back/controllers/product.js')
+
+function getAllProducts(){
+    
+    fetch('http://localhost:3000/api/products');
+    
+}
