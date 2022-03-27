@@ -9,3 +9,9 @@ async function displayProduct() {
 }
 
 displayProduct();
+
+const products = [1,2,3,4,5,6,7];
+var length = products.length;
+for (var i = 0; i < length; i++) {
+    console.log(products[i]);  
+}
