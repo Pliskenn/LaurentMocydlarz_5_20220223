@@ -1,14 +1,13 @@
-// UrlSearchParams pour recupérer l'id de l'article
+// Récupérer l'ID du produit
 const queryString = new URLSearchParams(window.location.search);
 
 // const productId =
 const searchParams = new URLSearchParams(queryString);
 const productId = searchParams.get("id");
-const productColors = searchParams.get("colors");
 
 populateProductForm(productId);
 
-// Utilise getProcduct getProduct(productId)
+// Intégration des données à la page produit
 async function populateProductForm(productId) {
   const product = await getProduct(productId);
   console.log(product);
@@ -34,11 +33,29 @@ async function populateProductForm(productId) {
   ).innerHTML += `<p id="description">${product.description}</p>`;
 
   // Couleurs
-  for (let chooseColor of product.colors){
+  for (let chooseColor of product.colors) {
     document.getElementById(
       "colors"
     ).innerHTML += `<option value="${chooseColor}">${chooseColor}</option>`;
-}
- }
+  }
 
- cart = localStorage;
+  // Répuération de la quantité
+  targetQty = document.getElementById("quantity");
+
+  // Récupération de la séléction
+  target = document.getElementById("addToCart");
+
+  target.addEventListener("click", () => {
+    const getItem = localStorage.getItem("products");
+    const getParseItem = JSON.parse(getItem);
+    console.log("JSON.parse("+getItem+")");
+    console.log("getItemparse = "+getParseItem);
+    cart = JSON.parse(localStorage.getItem("products"));
+    productAdded = {
+      quantity : targetQty.value
+    }
+    // Convertir en chaine de caractéres 
+    cart.push(productAdded);
+    localStorage.setItem("products", JSON.stringify(cart));
+  });
+}
