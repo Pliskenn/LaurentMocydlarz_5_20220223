@@ -12,10 +12,10 @@ async function populateProductForm(productId) {
   const product = await getProduct(productId);
   console.log(product);
 
+  let item__img = document.getElementsByClassName("item__img");
+
   // Image produit
-  document.getElementsByClassName(
-    "item__img"
-  )[0].innerHTML += `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+  item__img[0].innerHTML += `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
 
   // Nom du produit
   document.getElementById(
@@ -39,23 +39,70 @@ async function populateProductForm(productId) {
     ).innerHTML += `<option value="${chooseColor}">${chooseColor}</option>`;
   }
 
-  // Répuération de la quantité
+  // Récupération de la quantité
   targetQty = document.getElementById("quantity");
 
-  // Récupération de la séléction
+  // Récupération de la couleur
+  targetColor = document.getElementById("colors");
+
+  // Récupération de la séléction : bouton "Ajouter au panier"
   target = document.getElementById("addToCart");
 
   target.addEventListener("click", () => {
-    const getItem = localStorage.getItem("products");
-    const getParseItem = JSON.parse(getItem);
-    console.log("JSON.parse("+getItem+")");
-    console.log("getItemparse = "+getParseItem);
     cart = JSON.parse(localStorage.getItem("products"));
     productAdded = {
-      quantity : targetQty.value
+      quantity: targetQty.value,
+      color: targetColor.value,
+      id: productId,
+    };
+    // Convertir en chaine de caractéres
+    if (cart == null) {
+      cart = [];
     }
-    // Convertir en chaine de caractéres 
-    cart.push(productAdded);
+
+    // Renvoyer la position du produit du tableau
+    positionProduct = cart.findIndex((data) => {
+      let result;
+      if (data.color === targetColor.value && data.id === productId) {
+        result = true;
+      } else {
+        result = false;
+      }
+      return result;
+    });
+    console.log(positionProduct);
+
+    if (positionProduct === -1) {
+      cart.push(productAdded);
+    } else {
+      console.log(cart[positionProduct]);
+    }
+
     localStorage.setItem("products", JSON.stringify(cart));
   });
+
+  // Récupération de la quantité
+  // targetQty = document.getElementById("quantity");
+
+  // // Récupération de la couleur
+  // targetColor = document.getElementById("colors");
+
+  // // Récupération de la séléction
+  // target = document.getElementById("addToCart");
+
+  // target.addEventListener("click", () => {
+  //   // const getItem = localStorage.getItem("products");
+  //   // const getParseItem = JSON.parse(getItem);
+  //   // console.log("JSON.parse("+getItem+")");
+  //   // console.log("getItemparse = "+getParseItem);
+  //   cart = JSON.parse(localStorage.getItem("products"));
+  //   productAdded = {
+  //     quantity : targetQty.value,
+  //     colour : targetColor.value,
+
+  //   }
+  //   // Convertir en chaine de caractéres
+  //   cart.push(productAdded);
+  //   localStorage.setItem("products", JSON.stringify(cart));
+  // });
 }
