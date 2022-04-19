@@ -55,13 +55,14 @@ async function populateProductForm(productId) {
       color: targetColor.value,
       id: productId,
     };
+
     // Convertir en chaine de caractéres
     if (cart == null) {
       cart = [];
     }
 
-    // Renvoyer la position du produit du tableau
-    positionProduct = cart.findIndex((data) => {
+    // Renvoyer la position du produit du tableau (Retourner le produit du panier)
+    productInCart = cart.findIndex((data) => {
       let result;
       if (data.color === targetColor.value && data.id === productId) {
         result = true;
@@ -70,39 +71,28 @@ async function populateProductForm(productId) {
       }
       return result;
     });
-    console.log(positionProduct);
+    console.log(productInCart);
 
-    if (positionProduct === -1) {
+    // Si le produit n'existe pas 
+    if (targetQty.value < 1) {
+      alert("Vous devez commander au moins une quantité du produit.");
+    } else if (targetQty.value > 100) {
+      alert("Vous ne pouvez pas commander plus de 100 quantités de ce produit.");
+    } else if (targetColor.value == false) {
+      alert("Vous devez sélectionner une couleur.");
+    } else if (productInCart === -1) {
       cart.push(productAdded);
+      alert("Nous avons bien ajouté " + targetQty.value + " " + product.name + " au panier.");
     } else {
-      console.log(cart[positionProduct]);
+      // Si inférieur, faire cart.map afin de mettre à jour la qté du produit
+    console.log(cart[productInCart]);
+      //positionProduct.quantity += targetQty.value
+      let newQuantity = parseInt(cart[productInCart].quantity) + parseInt(targetQty.value);
+      cart[productInCart].quantity = newQuantity;
+      console.log(cart);
+      alert("Nous avons bien ajouté " + targetQty.value + " " + product.name + " au panier.");
     }
-
+    // Mettre à jour le panier
     localStorage.setItem("products", JSON.stringify(cart));
   });
-
-  // Récupération de la quantité
-  // targetQty = document.getElementById("quantity");
-
-  // // Récupération de la couleur
-  // targetColor = document.getElementById("colors");
-
-  // // Récupération de la séléction
-  // target = document.getElementById("addToCart");
-
-  // target.addEventListener("click", () => {
-  //   // const getItem = localStorage.getItem("products");
-  //   // const getParseItem = JSON.parse(getItem);
-  //   // console.log("JSON.parse("+getItem+")");
-  //   // console.log("getItemparse = "+getParseItem);
-  //   cart = JSON.parse(localStorage.getItem("products"));
-  //   productAdded = {
-  //     quantity : targetQty.value,
-  //     colour : targetColor.value,
-
-  //   }
-  //   // Convertir en chaine de caractéres
-  //   cart.push(productAdded);
-  //   localStorage.setItem("products", JSON.stringify(cart));
-  // });
 }
