@@ -84,9 +84,8 @@ async function populateProductForm(productId) {
       cart.push(productAdded);
       alert("Nous avons bien ajouté " + targetQty.value + " " + product.name + " au panier.");
     } else {
-      // Si inférieur, faire cart.map afin de mettre à jour la qté du produit
     console.log(cart[productInCart]);
-      //positionProduct.quantity += targetQty.value
+      // Modifier la quantité dans le LocalStorage si le produit existe
       let newQuantity = parseInt(cart[productInCart].quantity) + parseInt(targetQty.value);
       cart[productInCart].quantity = newQuantity;
       console.log(cart);
