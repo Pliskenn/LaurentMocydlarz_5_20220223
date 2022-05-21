@@ -2,13 +2,25 @@
 let productsLocalStorage = JSON.parse(localStorage.getItem("products"));
 console.log(productsLocalStorage);
 
+// Vérifier s'il y a du contenu dans le panier
+if (productsLocalStorage === null || productsLocalStorage.length === 0) {
+  document.getElementById(
+    "cart__items"
+  ).innerHTML = `<h2 class="cart__item">Votre panier est vide.</h2>`;
+} else {
+  for (let i = 0; i < productsLocalStorage.length; i++) {
+    populateProductForm(productsLocalStorage[i]);
+  }
+  sumOfAllProducts();
+}
 // Récupérer les informations produits par leur id
 async function populateProductForm(productData) {
-    const product = await getProduct(productData.id);
-    // Intégration HTML
-    document.getElementById(
-        "cart__items"
-    ).innerHTML += `<article class="cart__item" data-id="${product._id}" data-color="${productData.color}">
+  const product = await getProduct(productData.id);
+
+  // Intégration HTML
+  document.getElementById(
+    "cart__items"
+  ).innerHTML += `<article class="cart__item" data-id="${product._id}" data-color="${productData.color}">
     <div class="cart__item__img">
       <img src="${product.imageUrl}" alt="${product.altTxt}">
     </div>
@@ -28,17 +40,5 @@ async function populateProductForm(productData) {
         </div>
       </div>
     </div>
-  </article>`
-}
-
-
-// Vérifier s'il y a du contenu dans le panier
-if (productsLocalStorage === null || productsLocalStorage.length === 0) {
-    document.getElementById(
-        "cart__items"
-    ).innerHTML = `<h2 class="cart__item">Votre panier est vide.</h2>`;
-} else {
-    for (let i = 0; i < productsLocalStorage.length; i++) {
-        populateProductForm(productsLocalStorage[i]);
-    }
+  </article>`;
 }
