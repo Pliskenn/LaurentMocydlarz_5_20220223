@@ -76,7 +76,7 @@ async function populateProductForm(productId) {
     // Si le produit n'existe pas 
     if (targetQty.value < 1) {
       alert("Vous devez commander au moins une quantité du produit.");
-    } else if (targetQty.value > 100) {
+    } else if (targetQty.value > 100  || targetQty.value + productInCart > 100 ) {
       alert("Vous ne pouvez pas commander plus de 100 quantités de ce produit.");
     } else if (targetColor.value == false) {
       alert("Vous devez sélectionner une couleur.");
