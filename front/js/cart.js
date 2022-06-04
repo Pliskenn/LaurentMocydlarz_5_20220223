@@ -7,12 +7,26 @@ if (productsLocalStorage === null || productsLocalStorage.length === 0) {
   document.getElementById(
     "cart__items"
   ).innerHTML = `<h2 class="cart__item">Votre panier est vide.</h2>`;
+
+  // Si le panier n'est pas vide
 } else {
-  for (let i = 0; i < productsLocalStorage.length; i++) {
-    populateProductForm(productsLocalStorage[i]);
-  }
-  sumOfAllProducts();
+  // Appeler la fonction pour récupérer la liste des produits (objets) présents dans le panier
+  loadCartProducts();
 }
+
+// Récupérer la liste des produits (objets) présents dans le panier
+async function loadCartProducts() {
+  for (let i = 0; i < productsLocalStorage.length; i++) {
+    await populateProductForm(productsLocalStorage[i]);
+  }
+
+  // Afficher la quantité et le prix total
+  sumOfAllProducts();
+
+  // Modifier la quantité du produit
+  changeProductQuantity();
+}
+
 // Récupérer les informations produits par leur id
 async function populateProductForm(productData) {
   const product = await getProduct(productData.id);
