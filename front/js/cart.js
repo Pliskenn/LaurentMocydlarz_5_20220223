@@ -7,6 +7,7 @@ if (productsLocalStorage === null || productsLocalStorage.length === 0) {
   document.getElementById(
     "cart__items"
   ).innerHTML = `<h2 class="cart__item">Votre panier est vide.</h2>`;
+  sumOfAllProducts();
 
   // Si le panier n'est pas vide
 } else {
@@ -16,6 +17,7 @@ if (productsLocalStorage === null || productsLocalStorage.length === 0) {
 
 // Récupérer la liste des produits (objets) présents dans le panier
 async function loadCartProducts() {
+  let productsLocalStorage = JSON.parse(localStorage.getItem("products"));
   for (let i = 0; i < productsLocalStorage.length; i++) {
     await populateProductForm(productsLocalStorage[i]);
   }
@@ -25,6 +27,9 @@ async function loadCartProducts() {
 
   // Modifier la quantité du produit
   changeProductQuantity();
+
+  // Supprimer un produit
+  deleteProductQuantity()
 }
 
 // Récupérer les informations produits par leur id

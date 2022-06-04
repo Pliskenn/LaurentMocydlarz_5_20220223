@@ -43,15 +43,7 @@ async function populateProductForm(productId) {
   target = document.getElementById("addToCart");
 
   target.addEventListener("click", () => {
-    cart = JSON.parse(localStorage.getItem("products"));
-    // productAdded = {
-    //   quantity: targetQty.value,
-    //   color: targetColor.value,
-    //   id: productId,
-    // };
 
-    // Convertir en chaine de caractéres
-    // Si le produit n'existe pas
     if (targetQty.value < 1) {
       alert("Vous devez commander au moins une quantité du produit.");
       return;

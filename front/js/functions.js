@@ -20,7 +20,7 @@ async function sumOfAllProducts() {
     const product = await getProduct(productData.id);
     // Calcul du prix du panier
     totalQuantity += parseInt(productData.quantity);
-    totalPrice += parseFloat(product.price * totalQuantity);
+    totalPrice += parseFloat(product.price * parseInt(productData.quantity));
   }
 
   document.getElementById("totalPrice").innerText = totalPrice;
@@ -33,15 +33,48 @@ function changeProductQuantity() {
 
   if (cartItemsQuantity.length) {
     cartItemsQuantity.forEach((itemQuantity) => {
-      itemQuantity.addEventListener("input", (e) => {
+      itemQuantity.addEventListener("change", (e) => {
         const targetQty = e.target.value;
         const parentCartItemElt = e.target.closest(".cart__item");
         console.log(targetQty, parentCartItemElt);
-        const targetColor = parentCartItemElt.dataset.id;
-        const productId = parentCartItemElt.dataset.color;
+        const targetColor = parentCartItemElt.dataset.color;
+        const productId = parentCartItemElt.dataset.id;
         console.log(productId, targetColor);
         cart = JSON.parse(localStorage.getItem("products"));
         // Faire un find sur le tableau de produits du panier et mettre à jour la qté
+        updateCartQty(productId, targetColor, targetQty, "hard");
+        sumOfAllProducts();
+      });
+    });
+  } else {
+    console.log("Erreur");
+  }
+}
+
+// Supprimer le produit
+function deleteProductQuantity() {
+  let cartItemsDeleteBtn = document.querySelectorAll(".deleteItem");
+
+  if (cartItemsDeleteBtn.length) {
+    cartItemsDeleteBtn.forEach((itemQuantity) => {
+      itemQuantity.addEventListener("click", (e) => {
+        const parentCartItemElt = e.target.closest(".cart__item");
+
+        const targetColor = parentCartItemElt.dataset.color;
+        const productId = parentCartItemElt.dataset.id;
+
+        console.log(productId, targetColor);
+        cart = JSON.parse(localStorage.getItem("products"));
+        // Faire un find sur le tableau de produits du panier et mettre à jour la qté
+        let newCart = cart.filter((data) => {
+          if (data.color === targetColor && data.id === productId) return false;
+
+          return true;
+        });
+        // Mettre à jour le panier
+        localStorage.setItem("products", JSON.stringify(newCart));
+        parentCartItemElt.remove();
+        sumOfAllProducts();
       });
     });
   } else {
@@ -51,7 +84,7 @@ function changeProductQuantity() {
 
 // Mettre à jour le panier
 function updateCartQty(id, color, qty, replace = "soft") {
-  if (qty > 100) return 0; // 0 signifie que la qté est > 100
+  if (parseInt(qty) > 100) return 0; // 0 signifie que la qté est > 100
 
   let response = -1;
   let cart = JSON.parse(localStorage.getItem("products"));
@@ -78,7 +111,7 @@ function updateCartQty(id, color, qty, replace = "soft") {
   } else {
     const productInCartQuantity = parseInt(cart[productInCartIndex].quantity);
 
-    if ((qty + productInCartQuantity) > 100) return 0; // 0 signifie que la qté est > 100
+    if (parseInt(qty) + productInCartQuantity > 100) return 0; // 0 signifie que la qté est > 100
 
     switch (replace) {
       case "hard":
