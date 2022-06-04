@@ -21,9 +21,90 @@ async function sumOfAllProducts() {
     // Calcul du prix du panier
     totalQuantity += parseInt(productData.quantity);
     totalPrice += parseFloat(product.price * totalQuantity);
-    console.log(totalPrice, totalQuantity);
   }
 
   document.getElementById("totalPrice").innerText = totalPrice;
   document.getElementById("totalQuantity").innerText = totalQuantity;
+}
+
+// Changer la quantité du produit
+function changeProductQuantity() {
+  let cartItemsQuantity = document.querySelectorAll("input.itemQuantity");
+
+  if (cartItemsQuantity.length) {
+    cartItemsQuantity.forEach((itemQuantity) => {
+      itemQuantity.addEventListener("input", (e) => {
+        const targetQty = e.target.value;
+        const parentCartItemElt = e.target.closest(".cart__item");
+        console.log(targetQty, parentCartItemElt);
+        const targetColor = parentCartItemElt.dataset.id;
+        const productId = parentCartItemElt.dataset.color;
+        console.log(productId, targetColor);
+        cart = JSON.parse(localStorage.getItem("products"));
+        // Faire un find sur le tableau de produits du panier et mettre à jour la qté
+      });
+    });
+  } else {
+    console.log("Erreur");
+  }
+}
+
+// Mettre à jour le panier
+function updateCartQty(id, color, qty, replace = "soft") {
+  if (qty > 100) return 0; // 0 signifie que la qté est > 100
+
+  let response = -1;
+  let cart = JSON.parse(localStorage.getItem("products"));
+  if (cart == null) {
+    cart = [];
+  }
+
+  let productInCartIndex = cart.findIndex((data) => {
+    if (data.color === color && data.id === id) return true;
+
+    return false;
+  });
+
+  // S'il ne sagit pas d'une mise à jour
+  if (productInCartIndex === -1) {
+    const productToAdd = {
+      quantity: qty,
+      color: color,
+      id: id,
+    };
+
+    cart.push(productToAdd);
+    response = 1; // Si le produit est bien ajouté on assigne à response la valeur 1
+  } else {
+    const productInCartQuantity = parseInt(cart[productInCartIndex].quantity);
+
+    if ((qty + productInCartQuantity) > 100) return 0; // 0 signifie que la qté est > 100
+
+    switch (replace) {
+      case "hard":
+        // La quantité produit est "écrasée" par la nouvelle valeur
+        cart[productInCartIndex].quantity = parseInt(qty);
+        response = 3; // Si le produit est bien ajouté on assigne à response la valeur 1
+
+        break;
+
+      case "soft":
+        // La quantité ajoutée est additionnée à la quantité éxistante
+        cart[productInCartIndex].quantity =
+          parseInt(qty) + productInCartQuantity;
+        console.log(cart);
+        response = 2; // Si le produit est bien ajouté on assigne à response la valeur 1
+
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  console.log(cart);
+  // Mettre à jour le panier
+  localStorage.setItem("products", JSON.stringify(cart));
+
+  return response;
 }
