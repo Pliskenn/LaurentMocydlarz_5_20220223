@@ -111,22 +111,22 @@ function updateCartQty(id, color, qty, replace = "soft") {
   } else {
     const productInCartQuantity = parseInt(cart[productInCartIndex].quantity);
 
-    if (parseInt(qty) + productInCartQuantity > 100) return 0; // 0 signifie que la qté est > 100
-
     switch (replace) {
       case "hard":
+        if (parseInt(qty) > 100 || parseInt(qty) < 1) return 0; // 0 signifie que la qté est > 100
         // La quantité produit est "écrasée" par la nouvelle valeur
         cart[productInCartIndex].quantity = parseInt(qty);
-        response = 3; // Si le produit est bien ajouté on assigne à response la valeur 1
+        response = 3; // Si le produit est bien ajouté on assigne à response la valeur 3
 
         break;
 
       case "soft":
+        if (parseInt(qty) + productInCartQuantity > 100) return 0; // 0 signifie que la qté est > 100
         // La quantité ajoutée est additionnée à la quantité éxistante
         cart[productInCartIndex].quantity =
           parseInt(qty) + productInCartQuantity;
         console.log(cart);
-        response = 2; // Si le produit est bien ajouté on assigne à response la valeur 1
+        response = 2; // Si le produit est bien ajouté on assigne à response la valeur 2
 
         break;
 
