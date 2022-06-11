@@ -29,7 +29,7 @@ async function loadCartProducts() {
   changeProductQuantity();
 
   // Supprimer un produit
-  deleteProductQuantity()
+  deleteProductQuantity();
 }
 
 // Récupérer les informations produits par leur id
@@ -61,3 +61,7 @@ async function populateProductForm(productData) {
     </div>
   </article>`;
 }
+
+// Vérifier la synthaxe des formulaires 
+
+checkCartForm();
