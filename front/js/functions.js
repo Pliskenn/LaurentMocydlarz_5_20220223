@@ -152,10 +152,17 @@ function checkCartForm() {
   // Fonction de vérification des champs "Nom", "Prénom" et "Commune"
 
   const basicField = function (checkField) {
-    let basicWord = new RegExp("^[a-zA-Z\u00C0-\u00FF]*$");
+    let basicWord = new RegExp("^[a-zA-Z\u00C0-\u00FF -]*$");
 
     let testBasicField = basicWord.test(checkField.value);
-    console.log(testBasicField);
+    let validateField = checkField.nextElementSibling;
+
+    if (testBasicField) {
+      validateField.innerHTML = "";
+      console.log("Nom, Prénom ou Ville OK");
+    } else {
+      validateField.innerHTML = "Veuillez n'entrer que des lettres pour valider ce champ.";
+    }
   };
 
   // Fonction de vérification du champ "Adresse"
@@ -165,7 +172,14 @@ function checkCartForm() {
     );
 
     let testMailingField = mailingAddress.test(checkField.value);
-    console.log(testMailingField);
+    let validateField = checkField.nextElementSibling;
+
+    if (testMailingField) {
+      validateField.innerHTML = "";
+      console.log("Adresse OK");
+    } else {
+      validateField.innerHTML = "Veuillez n'entrer que des lettres pour valider ce champ.";
+    }
   };
   // Fonction de vérification du champ "Mail"
 
@@ -175,7 +189,14 @@ function checkCartForm() {
     );
 
     let testMailField = mailAddress.test(checkField.value);
-    console.log(testMailField);
+    let validateField = checkField.nextElementSibling;
+
+    if (testMailField) {
+      validateField.innerHTML = "";
+      console.log("Mail OK");
+    } else {
+      validateField.innerHTML = "Veuillez n'entrer que des lettres pour valider ce champ.";
+    }
   };
 
   // Détection des saisies dans les champs de formulaire
