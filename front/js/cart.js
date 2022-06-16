@@ -62,6 +62,141 @@ async function populateProductForm(productData) {
   </article>`;
 }
 
-// Vérifier la synthaxe des formulaires 
+// Valider le formulaire
 
-checkCartForm();
+const cartForm = document.querySelector(".cart__order__form");
+
+
+  // ******* Paramétrage des conditions de validation des champs du formulaire *******
+
+  // Fonction de vérification des champs "Nom", "Prénom" et "Commune"
+
+  const basicField = function (checkField) {
+    let basicWord = new RegExp("^[a-zA-Z\u00C0-\u00FF -]*$");
+
+    let testBasicField = basicWord.test(checkField.value);
+    let validateField = checkField.nextElementSibling;
+
+    if (testBasicField) {
+      validateField.innerHTML = "";
+      console.log("Nom, Prénom ou Ville OK");
+    } else {
+      validateField.innerHTML =
+        "Seuls les lettres, tiret et espace sont autorisés dans ce champ.";
+    }
+  };
+
+  // Fonction de vérification du champ "Adresse"
+  const mailingField = function (checkField) {
+    let mailingAddress = new RegExp(
+      "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
+    );
+
+    let testMailingField = mailingAddress.test(checkField.value);
+    let validateField = checkField.nextElementSibling;
+
+    if (testMailingField) {
+      validateField.innerHTML = "";
+      console.log("Adresse OK");
+    } else {
+      validateField.innerHTML = "Veuillez entrer une adresse valide.";
+    }
+  };
+  // Fonction de vérification du champ "Mail"
+
+  const mailField = function (checkField) {
+    let mailAddress = new RegExp(
+      "^[0-9a-z._-]+@{1}[0-9a-z.-]{2,}[.]{1}[a-z]{2,5}$",
+      "i"
+    );
+
+    let testMailField = mailAddress.test(checkField.value);
+    let validateField = checkField.nextElementSibling;
+
+    if (testMailField) {
+      validateField.innerHTML = "";
+      console.log("Mail OK");
+    } else {
+      validateField.innerHTML = "Veuillez entrer une adresse mail valide.";
+    }
+  };
+
+  // Détection des saisies dans les champs de formulaire
+
+  // Prénom
+  console.log(cartForm.firstName);
+  cartForm.firstName.addEventListener("change", function () {
+    basicField(this);
+  });
+
+  // Nom
+  console.log(cartForm.lastName);
+  cartForm.lastName.addEventListener("change", function () {
+    basicField(this);
+  });
+
+  // Adresse
+  console.log(cartForm.address);
+  cartForm.address.addEventListener("change", function () {
+    mailingField(this);
+  });
+
+  // Commune
+  console.log(cartForm.city);
+  cartForm.city.addEventListener("change", function () {
+    basicField(this);
+  });
+
+  // Mail
+  console.log(cartForm.email);
+  cartForm.email.addEventListener("change", function () {
+    mailField(this);
+  });
+
+// Envoi du panier + formulaire
+
+// ****** Envoi du panier + formulaire ******
+
+  cartForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+        // Récupérer les infos du formulaire
+        const setFirstName = cartForm.firstName.value;
+        const setLastName = cartForm.lastName.value;
+        const setAddress = cartForm.address.value;
+        const setCity = cartForm.city.value;
+        const setMail = cartForm.email.value;
+
+        // Récupérer les éléments du panier
+
+        let productsLocalStorage = JSON.parse(localStorage.getItem("products"));
+
+        let productOfCart = [];
+    for (let i = 0; i < productsLocalStorage.length; i++) {
+      productOfCart.push(productsLocalStorage[i].id);
+    }
+
+    //  Construction d'un array depuis le local storage
+    
+    const order = {
+      contact: {
+        firstName: setFirstName,
+        lastName: setLastName,
+        address: setAddress,
+        city: setCity,
+        email: setMail,
+      },
+      products: productOfCart,
+    };
+
+    console.log(order);
+
+fetch("http://localhost:3000/api/products/order", {
+  method: "POST",
+  body: JSON.stringify(order),
+  headers: {
+    'Content-type': 'application/json; charset=UTF-8',
+  },
+})
+  
+  })
+
