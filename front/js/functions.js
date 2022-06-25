@@ -27,6 +27,7 @@ async function sumOfAllProducts() {
   document.getElementById("totalQuantity").innerText = totalQuantity;
 }
 
+
 // Changer la quantité du produit
 function changeProductQuantity() {
   let cartItemsQuantity = document.querySelectorAll("input.itemQuantity");
@@ -36,20 +37,24 @@ function changeProductQuantity() {
       itemQuantity.addEventListener("change", (e) => {
         const targetQty = e.target.value;
         const parentCartItemElt = e.target.closest(".cart__item");
-        console.log(targetQty, parentCartItemElt);
         const targetColor = parentCartItemElt.dataset.color;
         const productId = parentCartItemElt.dataset.id;
-        console.log(productId, targetColor);
         cart = JSON.parse(localStorage.getItem("products"));
+        console.log(targetQty);
+        if (targetQty > 100 || targetQty < 1 ) {
+          alert("Vous n'avez pas entré une quantité valide.");
+        } 
         // Faire un find sur le tableau de produits du panier et mettre à jour la qté
         updateCartQty(productId, targetColor, targetQty, "hard");
         sumOfAllProducts();
       });
     });
-  } else {
+  } 
+  else {
     console.log("Erreur");
   }
 }
+
 
 // Supprimer le produit
 function deleteProductQuantity() {
@@ -63,7 +68,6 @@ function deleteProductQuantity() {
         const targetColor = parentCartItemElt.dataset.color;
         const productId = parentCartItemElt.dataset.id;
 
-        console.log(productId, targetColor);
         cart = JSON.parse(localStorage.getItem("products"));
         // Faire un find sur le tableau de produits du panier et mettre à jour la qté
         let newCart = cart.filter((data) => {
@@ -78,7 +82,7 @@ function deleteProductQuantity() {
       });
     });
   } else {
-    console.log("Erreur");
+    console.log("Erreur delete");
   }
 }
 
@@ -113,7 +117,7 @@ function updateCartQty(id, color, qty, replace = "soft") {
 
     switch (replace) {
       case "hard":
-        if (parseInt(qty) > 100 || parseInt(qty) < 1) return 0; // 0 signifie que la qté est > 100
+        if (parseInt(qty) > 100 || parseInt(qty) < 1) return 0; // 0 signifie que la qté est > 100 ou < 1
         // La quantité produit est "écrasée" par la nouvelle valeur
         cart[productInCartIndex].quantity = parseInt(qty);
         response = 3; // Si le produit est bien ajouté on assigne à response la valeur 3
@@ -125,7 +129,6 @@ function updateCartQty(id, color, qty, replace = "soft") {
         // La quantité ajoutée est additionnée à la quantité éxistante
         cart[productInCartIndex].quantity =
           parseInt(qty) + productInCartQuantity;
-        console.log(cart);
         response = 2; // Si le produit est bien ajouté on assigne à response la valeur 2
 
         break;
@@ -134,8 +137,7 @@ function updateCartQty(id, color, qty, replace = "soft") {
         break;
     }
   }
-
-  console.log(cart);
+  
   // Mettre à jour le panier
   localStorage.setItem("products", JSON.stringify(cart));
 

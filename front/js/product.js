@@ -63,9 +63,7 @@ async function populateProductForm(productId) {
 
     switch (response) {
       case 0:
-        alert(
-          "Vous ne pouvez pas commander plus de 100 quantités de ce produit."
-        );
+        alert("Vous ne pouvez pas commander plus de 100 quantités de ce produit.");
 
         break;
 
