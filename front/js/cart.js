@@ -155,69 +155,61 @@ cartForm.email.addEventListener("change", function () {
 // ****** Envoi du panier + formulaire ******
 
 // Vérifier s'il y a du contenu dans le panier
-if (productsLocalStorage === null || productsLocalStorage.length === 0) {
-  // Si le panier est vide
-  cartForm.addEventListener("submit", () => {
+
+cartForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  let productsLocalStorage = JSON.parse(localStorage.getItem("products"));
+  if (productsLocalStorage === null || productsLocalStorage.length === 0) {
+    // Si le panier est vide
     alert("Votre panier est vide.");
+    return;
+  }
+  // Récupérer les infos du formulaire
+  const setFirstName = cartForm.firstName.value;
+  const setLastName = cartForm.lastName.value;
+  const setAddress = cartForm.address.value;
+  const setCity = cartForm.city.value;
+  const setMail = cartForm.email.value;
+
+  // Récupérer les éléments du panier
+
+  let productOfCart = [];
+  for (let i = 0; i < productsLocalStorage.length; i++) {
+    productOfCart.push(productsLocalStorage[i].id);
+  }
+
+  // Récupération des données pour l'envoi de la commande
+
+  const order = {
+    contact: {
+      firstName: setFirstName,
+      lastName: setLastName,
+      address: setAddress,
+      city: setCity,
+      email: setMail,
+    },
+    products: productOfCart,
+  };
+
+  console.log(order);
+
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    body: JSON.stringify(order),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
   })
-
-  // Si le panier n'est pas vide
-} else {
-  // Le client peut valider sa commande
-
-  cartForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    // Récupérer les infos du formulaire
-    const setFirstName = cartForm.firstName.value;
-    const setLastName = cartForm.lastName.value;
-    const setAddress = cartForm.address.value;
-    const setCity = cartForm.city.value;
-    const setMail = cartForm.email.value;
-  
-    // Récupérer les éléments du panier
-  
-    let productsLocalStorage = JSON.parse(localStorage.getItem("products"));
-  
-    let productOfCart = [];
-    for (let i = 0; i < productsLocalStorage.length; i++) {
-      productOfCart.push(productsLocalStorage[i].id);
-    }
-  
-    // Récupération des données pour l'envoi de la commande 
-  
-    const order = {
-      contact: {
-        firstName: setFirstName,
-        lastName: setLastName,
-        address: setAddress,
-        city: setCity,
-        email: setMail,
-      },
-      products: productOfCart,
-    };
-  
-    console.log(order);
-  
-    fetch("http://localhost:3000/api/products/order", {
-      method: "POST",
-      body: JSON.stringify(order),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
     .then((res) => res.json())
     .then((data) => {
-        // Redirection vers la page de confirmation
+      // Redirection vers la page de confirmation
       data.orderId;
       if (data.orderId && data.orderId.length) {
         localStorage.setItem("products", JSON.stringify([]));
-        document.location.href=`confirmation.html?id=${data.orderId}`;
+        document.location.href = `confirmation.html?id=${data.orderId}`;
       } else {
-        alert("Votre commande n'a pas pu être enregistrée.")
+        alert("Votre commande n'a pas pu être enregistrée.");
       }
     });
-  
-  });
-}
-
-
+});

@@ -42,7 +42,7 @@ function changeProductQuantity() {
         cart = JSON.parse(localStorage.getItem("products"));
         console.log(targetQty);
         if (targetQty > 100 || targetQty < 1 ) {
-          alert("Vous n'avez pas entré une quantité valide.");
+          alert("Vous n'avez pas entré une quantité valide (entre 1 et 100).");
         } 
         // Faire un find sur le tableau de produits du panier et mettre à jour la qté
         updateCartQty(productId, targetColor, targetQty, "hard");
